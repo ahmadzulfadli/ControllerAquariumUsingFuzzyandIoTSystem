@@ -1,0 +1,57 @@
+{% extends 'base.html' %} 
+
+{% block menu %}
+<div class="sidebar-wrapper">
+  <ul class="nav">
+    <li>
+      <a href="/">
+        <i class="nc-icon nc-bank"></i>
+        <p>Dashboard</p>
+      </a>
+    </li>
+    <li class="active">
+      <a href="/tabel">
+        <i class="nc-icon nc-tile-56"></i>
+        <p>Table List</p>
+      </a>
+    </li>
+  </ul>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- End Navbar -->
+<div class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h4 class="card-title">Data Sensor</h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead class="text-primary">
+                <th style="text-align: center;">No</th>
+                <th style="text-align: center;">Temperature</th>
+                <th style="text-align: center;">Ph-Level</th>
+                <th style="text-align: center;">Time</th>
+              </thead>
+              <tbody>
+                {% for data in data %}
+                <tr>
+                  <td style="text-align: center;">{{loop.revindex}}</td>
+                  <td style="text-align: center;">{{data.data_temp}}</td>
+                  <td style="text-align: center;">{{data.data_ph}}</td>
+                  <td style="text-align: center;">{{data.timestamps}}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

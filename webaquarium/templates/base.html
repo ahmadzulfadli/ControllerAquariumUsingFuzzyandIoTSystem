@@ -1,0 +1,120 @@
+<!--
+=========================================================
+* Paper Dashboard 2 - v2.0.1
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/paper-dashboard-2
+* Copyright 2020 Creative Tim (https://www.creative-tim.com)
+
+Coded by www.creative-tim.com
+
+ =========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link
+      rel="apple-touch-icon"
+      sizes="76x76"
+      href="{{ url_for('static', filename='img/uin.png')}}"
+    />
+    <link rel="icon" type="image/png" href="{{ url_for('static',filename='img/favicon.png')}}" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>Monitoring Aquarium</title>
+    <meta
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no"
+      name="viewport"
+    />
+    <!--     Fonts and icons     -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200"
+      rel="stylesheet"
+    />
+    <link
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
+    <!-- CSS Files -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css')}}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/paper-dashboard.css')}}" rel="stylesheet" />
+  </head>
+
+  <body class="">
+    <div class="wrapper">
+      <div class="sidebar" data-color="white" data-active-color="danger">
+        <div class="logo">
+          <a href="#" class="simple-text logo-mini">
+            <div class="logo-image-small">
+              <img src="{{url_for('static',filename='img/uin.png')}}" />
+            </div>
+            <!-- <p>CT</p> -->
+          </a>
+          <a
+            href="#"
+            class="simple-text logo-normal"
+          >
+            IoT System
+            <!-- <div class="logo-image-big">
+            <img src="../assets/img/logo-big.png">
+          </div> -->
+          </a>
+        </div>
+        {% block menu %}
+        {% endblock %}
+      </div>
+      <div class="main-panel">
+        <!-- Navbar -->
+        <nav
+          class="navbar navbar-expand-lg navbar-absolute fixed-top navbar-transparent"
+        >
+          <div class="container-fluid">
+            <div class="navbar-wrapper">
+              <div class="navbar-toggle">
+                <button type="button" class="navbar-toggler">
+                  <span class="navbar-toggler-bar bar1"></span>
+                  <span class="navbar-toggler-bar bar2"></span>
+                  <span class="navbar-toggler-bar bar3"></span>
+                </button>
+              </div>
+              <a class="navbar-brand" href="javascript:;">Data Sensor</a>
+          </div>
+        </nav>
+        <!-- End Navbar -->
+
+        <!-- Content -->
+        {% block content %}
+        {% endblock %}
+        <!-- End Content -->
+
+        <!-- Footer -->
+        <footer class="footer footer-black footer-white">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="credits ml-auto">
+                  <span class="copyright">
+                    ©
+                    <script>
+                      document.write(new Date().getFullYear());
+                    </script>
+                    , develop with <i class="fa fa-heart heart"></i> by RESTEC TEAM
+                  </span>
+                </div>
+              </div>
+            </div>
+          </footer>
+        </div>
+      </div>
+      <!-- End Content -->
+
+      <!--   Core JS Files   -->
+      <script src="{{url_for('static',filename='js/core/popper.min.js')}}"></script>
+      <script src="{{url_for('static',filename='js/core/bootstrap.min.js')}}"></script>
+      <script src="{{url_for('static',filename='js/plugins/perfect-scrollbar.jquery.min.js')}}"></script>
+
+      {% block scripts %}
+      {% endblock %}
+    </body>
+  </html>
