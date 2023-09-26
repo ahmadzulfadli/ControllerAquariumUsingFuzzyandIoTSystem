@@ -18,8 +18,8 @@ void baca_pH(float Po)
 
 int bacasensorlevel(int atas, int bawah)
 {
-    nilai_atas = analogRead(A1);
-    nilai_bawah = analogRead(A0);
+    nilai_atas = analogRead(pinAtas);
+    nilai_bawah = analogRead(pinBawah);
     if (nilai_atas > 4)
     {
         atas = HIGH;
@@ -44,9 +44,9 @@ int pompaawal()
     bacasensorlevel(kondisiatas, kondisibawah);
     while (kondisiatas == LOW)
     {
-        digitalWrite(pinpengisi, HIGH);
+        digitalWrite(pinRelayPengisi, HIGH);
     }
-    digitalWrite(pinpengisi, LOW);
+    digitalWrite(pinRelayPengisi, LOW);
 }
 
 int pompapenguras()
@@ -55,14 +55,14 @@ int pompapenguras()
     bacasensorlevel(kondisiatas, kondisibawah);
     while (kondisibawah == HIGH)
     {
-        digitalWrite(pinpenguras, HIGH);
+        digitalWrite(pinRelayPenguras, HIGH);
     }
-    digitalWrite(pinpenguras, LOW);
+    digitalWrite(pinRelayPenguras, LOW);
     while (kondisiatas == LOW)
     {
-        digitalWrite(pinpengisi, HIGH);
+        digitalWrite(pinRelayPengisi, HIGH);
     }
-    digitalWrite(pinpengisi, LOW);
+    digitalWrite(pinRelayPengisi, LOW);
 }
 
 void sendDataToWebserver(){
@@ -71,47 +71,29 @@ void sendDataToWebserver(){
 
 int display()
 {
-    DateTime now = rtc.now();
-    baca_suhu(nilai_suhu);
-    baca_pH(nilai_pH);
+    timeClient.update();
 
+    // Display time to LCD
     lcd.setCursor(0, 0);
-    lcd.print(now.day(), DEC);
-    Serial.print(now.day(), DEC);
-    lcd.print("-");
-    Serial.print("-");
-    lcd.print(now.month(), DEC);
-    Serial.print(now.month(), DEC);
-    lcd.print("-");
-    Serial.print("-");
-    lcd.print(now.year(), DEC);
-    Serial.print(now.year(), DEC);
-    lcd.print(" ");
-    Serial.print(" ");
-    lcd.print(now.hour(), DEC);
-    Serial.print(now.hour(), DEC);
-    lcd.print(":");
-    Serial.print(":");
-    lcd.print(now.minute(), DEC);
-    Serial.print(now.minute(), DEC);
-    Serial.print(":");
-    Serial.print(now.second(), DEC);
+    lcd.print(timeClient.getFormattedTime());
 
+    // Display suhu to LCD
     lcd.setCursor(0, 1);
-    Serial.print(", ");
-    lcd.print("S:");
-    Serial.print("Suhu Air: ");
-    lcd.print(nilai_suhu);
-    Serial.print(nilai_suhu);
-    lcd.write(0xDF);
-    lcd.print("C");
-    Serial.print(" *C");
-    Serial.print(", ");
-    lcd.print(" p:");
-    Serial.print("pH Air: ");
-    lcd.print(nilai_pH, 2);
-    Serial.print(nilai_pH, 2);
-    Serial.println();
+    lcd.print("Suhu: ");
+    lcd.print(DS18B20.getTempCByIndex(0));
+    lcd.print(" C");
+
+    // Display pH to LCD
+    lcd.setCursor(9, 1);
+    lcd.print("pH: ");
+    lcd.print(Po);
+
+    // Display ALl to Serial
+    Serial.print(timeClient.getFormattedTime());
+    Serial.print(" | Suhu: ");
+    Serial.print(DS18B20.getTempCByIndex(0));
+    Serial.print(" C | pH: ");
+    Serial.println(Po);
 }
 
 #endif // FUNGSI_CONTROLLER_AQUARIUM_H
