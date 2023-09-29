@@ -29,7 +29,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/pr001/Desktop/webaquarium/env"
+set -gx VIRTUAL_ENV "/home/pr001/Desktop/AquariumFuzzyandIoT/webaquarium/env"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
