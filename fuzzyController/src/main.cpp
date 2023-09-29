@@ -8,8 +8,15 @@ void setup()
   Serial.begin(115200);
   setupFuzzy();
 
+  // // LCD
+  // lcd.init();
+  // lcd.backlight();
+
+  // // DS18B20
+  // DS18B20.begin();
+
   // water check
-  pompaawal();
+  // pompaawal();
 }
 
 void loop()
@@ -21,42 +28,51 @@ void loop()
     previousMillis = currentMillis;
 
     float temperature, pH;
-    baca_suhu(temperature);
-    baca_pH(pH);
+    // baca_suhu(temperature);
+    // baca_pH(pH);
 
-    fuzzy->setInput(1, temperature);
-    fuzzy->setInput(2, pH);
+    temperature = 25;
+    pH = 7;
 
-    fuzzy->fuzzify();
-
-    float heater = fuzzy->defuzzify(1);
-    float cooler = fuzzy->defuzzify(2);
-    float pump = fuzzy->defuzzify(3);
-
-    display();
-
-    Serial.println("====================================");
-    if (heater > 0)
+    if (temperature > 0 and pH > 0)
     {
-      Serial.print("Heater: ");
-      Serial.println("ON");
+      fuzzy->setInput(1, temperature);
+      fuzzy->setInput(2, pH);
 
-      digitalWrite(pinRelayHeater, HIGH);
-    }
-    if (cooler > 0)
-    {
-      Serial.print("Cooler: ");
-      Serial.println("ON");
+      fuzzy->fuzzify();
 
-      digitalWrite(pinRelayCooler, HIGH);
-    }
-    if (pump > 0)
-    {
-      Serial.print("Pump: ");
-      Serial.println("ON");
+      float heater = fuzzy->defuzzify(1);
+      float cooler = fuzzy->defuzzify(2);
+      float pump = fuzzy->defuzzify(3);
 
-      pompapenguras();
+      // display(temperature, pH);
+
+      Serial.println("====================================");
+      if (heater > 0)
+      {
+        Serial.print("Heater: ");
+        Serial.println("ON");
+
+        digitalWrite(pinRelayHeater, HIGH);
+      }
+      if (cooler > 0)
+      {
+        Serial.print("Cooler: ");
+        Serial.println("ON");
+
+        digitalWrite(pinRelayCooler, HIGH);
+      }
+      if (pump > 0)
+      {
+        Serial.print("Pump: ");
+        Serial.println("ON");
+
+        // pompapenguras();
+      }
+      Serial.println("====================================");
     }
-    Serial.println("====================================");
+
+    // Send data to server
+    // sendDataToWebserver(temperature, pH);
   }
 }
