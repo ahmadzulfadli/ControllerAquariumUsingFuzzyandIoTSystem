@@ -5,9 +5,9 @@
 void setupFuzzy()
 {
     // FuzzyInput
-    FuzzySet *temperature_cold = new FuzzySet(0, 2, 12, 22);
-    FuzzySet *temperature_comfortable = new FuzzySet(22, 24, 26, 28);
-    FuzzySet *temperature_hot = new FuzzySet(28, 38, 48, 50);
+    FuzzySet *temperature_cold = new FuzzySet(0, 7, 14, 22);
+    FuzzySet *temperature_comfortable = new FuzzySet(22, 25, 28, 31);
+    FuzzySet *temperature_hot = new FuzzySet(31, 37, 44, 50);
 
     FuzzyInput *temperature = new FuzzyInput(1);
     temperature->addFuzzySet(temperature_cold);
@@ -17,7 +17,7 @@ void setupFuzzy()
 
     FuzzySet *pH_acidic = new FuzzySet(0, 2, 4, 6.5);
     FuzzySet *pH_neutral = new FuzzySet(6.5, 7, 7.5, 8);
-    FuzzySet *pH_basic = new FuzzySet(7.5, 10, 13, 15);
+    FuzzySet *pH_basic = new FuzzySet(7.5, 10, 13, 30);
 
     FuzzyInput *pH = new FuzzyInput(2);
     pH->addFuzzySet(pH_acidic);

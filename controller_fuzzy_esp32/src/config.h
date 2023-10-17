@@ -10,9 +10,10 @@
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 
+
 // WIFI
-const char* ssid = "Ahmad Zulfadli";
-const char* password = "sampoerna12";
+const char *ssid = "Ahmad Zulfadli";
+const char *password = "sampoerna12";
 
 // NTP
 WiFiUDP ntpUDP;
@@ -22,21 +23,23 @@ NTPClient timeClient(ntpUDP, "pool.ntp.org", utcOffsetInSeconds);
 // FUZZY
 Fuzzy *fuzzy = new Fuzzy();
 
-//DS18B20
+// DS18B20
 #define ONE_WIRE_BUS 5
 OneWire oneWire(ONE_WIRE_BUS);
-DallasTemperature sensors(&oneWire);
+DallasTemperature temperature(&oneWire);
 
 // LCD
-LiquidCrystal_I2C lcd(0x27,20,4);
+LiquidCrystal_I2C lcd(0x3F, 20, 4);
 
 // PH
 #define ph_pin 34
-float nilai_analog_PH;
-float TeganganPh;
-float PH_step;
-float PH4 = 4.0;
-float PH7 = 7.0;
+unsigned long int avgValue;
+float avgPH;
+float b;
+int buf[10],temp;
+
+float m = (6.8 - 4.0) / (129.0 - 112.14); // Kemiringan
+float bPH = 6.8 - (m * 129.0); // Bias
 
 // LEVEL
 #define pinAtas 35
@@ -45,7 +48,6 @@ float PH7 = 7.0;
 #define pinRelayPenguras 12
 int nilai_atas;
 int nilai_bawah;
-
 
 // OUTPUT
 #define pinRelayHeater 19

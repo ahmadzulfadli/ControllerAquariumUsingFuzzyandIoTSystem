@@ -5,7 +5,17 @@
 void setup()
 {
   Serial.begin(115200);
-  Serial.println("Hello World!");
+
+  // RELAY
+  pinMode(pinRelayHeater, OUTPUT);
+  pinMode(pinRelayCooler, OUTPUT);
+  pinMode(pinRelayPengisi, OUTPUT);
+  pinMode(pinRelayPenguras, OUTPUT);
+
+  digitalWrite(pinRelayHeater, HIGH);
+  digitalWrite(pinRelayCooler, HIGH);
+  digitalWrite(pinRelayPengisi, HIGH);
+  digitalWrite(pinRelayPenguras, HIGH);
 
   // WIFI
   WiFi.begin(ssid, password);
@@ -18,18 +28,24 @@ void setup()
   Serial.print("IP Address: ");
   Serial.println(WiFi.localIP());
 
-  // DS18B20
-  sensors.begin();
-
-  // LCD
+    // LCD
   lcd.init();
   lcd.backlight();
+  lcd.setCursor(0, 0);
+  lcd.print("Connected to ...");
+  lcd.setCursor(0, 1);
+  lcd.print(ssid);
+  // delay(2000);
+  // lcd.clear();
+
+  // DS18B20
+  temperature.begin();
 
   // FUZZY
   setupFuzzy();
 
-  //POMPA AWAL
-  pompaawal();
+  // POMPA AWAL
+  //  pompaawal();
 }
 
 void loop()
@@ -39,6 +55,7 @@ void loop()
   if (currentMillis - previousMillis >= interval)
   {
     previousMillis = currentMillis;
+    avgPH = 0;
 
     float temp, PH;
     readTemp(temp);
@@ -53,26 +70,28 @@ void loop()
     float pump = fuzzy->defuzzify(3);
 
     Serial.println("====================================");
+    Serial.println(heater);
+    Serial.println(cooler);
     if (heater > 0)
     {
       Serial.print("Heater: ");
       Serial.println("ON");
 
-      digitalWrite(pinRelayHeater, HIGH);
+      digitalWrite(pinRelayHeater, LOW);
     }
     if (cooler > 0)
     {
       Serial.print("Cooler: ");
       Serial.println("ON");
 
-      digitalWrite(pinRelayCooler, HIGH);
+      digitalWrite(pinRelayCooler, LOW);
     }
     if (pump > 0)
     {
       Serial.print("Pump: ");
       Serial.println("ON");
 
-      pompapenguras();
+      // pompapenguras();
     }
     Serial.println("====================================");
 
