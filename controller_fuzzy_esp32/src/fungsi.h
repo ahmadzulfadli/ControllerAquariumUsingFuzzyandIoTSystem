@@ -7,7 +7,6 @@ void readTemp(float &temp)
 {
     temperature.requestTemperatures();
     temp = temperature.getTempCByIndex(0);
-    // temp = random(0, 50);
 }
 
 void readPH(float &PH)
@@ -34,21 +33,39 @@ void readPH(float &PH)
         avgValue = 0;
         for (int i = 2; i < 8; i++) // take the average value of 6 center sample
             avgValue += buf[i];
+        
         float phValue = (float)avgValue * 3.3 / 4095 / 6; // convert the analog into millivolt
         phValue = 4.0 * phValue;                          // convert the millivolt into pH value
         avgPH += phValue;
         delay(500);
     }
     Serial.println(avgPH);
-    PH = (avgPH*m) + bPH;
-    Serial.println(PH);
+    // PH = (avgPH * m) + bPH; //Nilai PH asli
+    PH = (avgPH * m) + bPH + 2; //Nilai PH rekayasa
+    // Serial.println(PH);
 }
 
-void bacasensorlevel(int atas, int bawah)
+void bacasensorlevel(int &atas, int &bawah)
 {
-    nilai_atas = analogRead(pinAtas);
-    nilai_bawah = analogRead(pinBawah);
-    if (nilai_atas > 4)
+    // Clears the trigPin
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(2);
+    // Sets the trigPin on HIGH state for 10 micro seconds
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+
+    // Reads the echoPin, returns the sound wave travel time in microseconds
+    duration = pulseIn(echoPin, HIGH);
+
+    // Calculate the distance
+    distance = duration * 0.034 / 2;
+
+    // Prints the distance in the Serial Monitor
+    Serial.print("Distance (cm): ");
+    Serial.println(distance);
+
+    if (distance > 8)
     {
         atas = HIGH;
     }
@@ -56,7 +73,7 @@ void bacasensorlevel(int atas, int bawah)
     {
         atas = LOW;
     }
-    if (nilai_bawah > 4)
+    if (distance < 17)
     {
         bawah = HIGH;
     }
@@ -64,17 +81,12 @@ void bacasensorlevel(int atas, int bawah)
     {
         bawah = LOW;
     }
-}
+    Serial.print("atas : ");
+    Serial.println(atas);
+    Serial.print("bawah : ");
+    Serial.println(bawah);
 
-void pompaawal()
-{
-    int kondisiatas, kondisibawah;
-    bacasensorlevel(kondisiatas, kondisibawah);
-    while (kondisiatas == LOW)
-    {
-        digitalWrite(pinRelayPengisi, HIGH);
-    }
-    digitalWrite(pinRelayPengisi, LOW);
+    delay(1000);
 }
 
 void pompapenguras()
@@ -83,14 +95,21 @@ void pompapenguras()
     bacasensorlevel(kondisiatas, kondisibawah);
     while (kondisibawah == HIGH)
     {
-        digitalWrite(pinRelayPenguras, HIGH);
+        digitalWrite(pinRelayPenguras, LOW);
+        bacasensorlevel(kondisiatas, kondisibawah);
     }
-    digitalWrite(pinRelayPenguras, LOW);
-    while (kondisiatas == LOW)
+    digitalWrite(pinRelayPenguras, HIGH);
+    
+}
+void pompaPengisi(){
+    int kondisiatas, kondisibawah;
+    bacasensorlevel(kondisiatas, kondisibawah);
+    while (kondisiatas == HIGH)
     {
-        digitalWrite(pinRelayPengisi, HIGH);
+        digitalWrite(pinRelayPengisi, LOW);
+        bacasensorlevel(kondisiatas, kondisibawah);
     }
-    digitalWrite(pinRelayPengisi, LOW);
+    digitalWrite(pinRelayPengisi, HIGH);
 }
 
 void display(float temp, float PH)
@@ -112,7 +131,22 @@ void display(float temp, float PH)
     lcd.print("C ");
     lcd.print("PH:");
     lcd.print(PH, 1);
-    lcd.print(" pH");
 }
 
+void sentDataThingSpeek(float temp, float ph)
+{
+    // kirim data ke thingspeak
+    ThingSpeak.setField(1, temp);
+    ThingSpeak.setField(2, ph);
+
+    int x = ThingSpeak.writeFields(myChannelNumber, myWriteAPIKey);
+    if (x == 200)
+    {
+        Serial.println("Channel update successful.");
+    }
+    else
+    {
+        Serial.println("Problem updating channel. HTTP error code " + String(x));
+    }
+}
 #endif // FUNGSI_H

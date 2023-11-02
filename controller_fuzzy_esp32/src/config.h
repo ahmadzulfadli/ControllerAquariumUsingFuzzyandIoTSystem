@@ -9,7 +9,7 @@
 #include <WiFi.h>
 #include <NTPClient.h>
 #include <WiFiUdp.h>
-
+#include "ThingSpeak.h"
 
 // WIFI
 const char *ssid = "Ahmad Zulfadli";
@@ -20,11 +20,16 @@ WiFiUDP ntpUDP;
 const long utcOffsetInSeconds = 25200;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", utcOffsetInSeconds);
 
+// THINGSPEAK
+WiFiClient client;
+unsigned long myChannelNumber = 2300657;
+const char *myWriteAPIKey = "07Z4VPZ7XHOKT98B";
+
 // FUZZY
 Fuzzy *fuzzy = new Fuzzy();
 
 // DS18B20
-#define ONE_WIRE_BUS 5
+#define ONE_WIRE_BUS 5 
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature temperature(&oneWire);
 
@@ -38,24 +43,22 @@ float avgPH;
 float b;
 int buf[10],temp;
 
-float m = (6.8 - 4.0) / (129.0 - 112.14); // Kemiringan
-float bPH = 6.8 - (m * 129.0); // Bias
+float m = (5.2 - 4.3) / (123.80 - 117.90); // Kemiringan
+float bPH = 5.2 - (m * 123.80); // Bias
 
-// LEVEL
-#define pinAtas 35
-#define pinBawah 32
-#define pinRelayPengisi 14
-#define pinRelayPenguras 12
-int nilai_atas;
-int nilai_bawah;
+// LEVEL WITH ULTRASONIC
+const int trigPin = 12;
+const int echoPin = 13;
+
+//define sound speed in cm/uS
+long duration;
+float distance;
 
 // OUTPUT
-#define pinRelayHeater 19
-#define pinRelayCooler 18
-
-// WEB SERVER
-const char *host = "192.168.80.240";
-const int port = 80;
+int pinRelayPenguras = 14;
+int pinRelayPengisi = 27;
+int pinRelayCooler = 26;
+int pinRelayHeater = 25;
 
 // MILLIS
 unsigned long previousMillis = 0;
